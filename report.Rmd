@@ -1,0 +1,132 @@
+#Regression Report 
+<br />
+*`r input$name`* <br />   
+*`r as.character(format(Sys.Date(), format="%B %d, %Y"))`*
+
+<br />
+
+###1. Summary Statistics
+
+This report was created using the `r input$dataset` data set.  The dependent variable in my analysis is `r input$dv` and independent variable in my analysis is `r input$iv`. 
+
+<br />
+
+The summary statistics of `r input$dv` and `r input$iv` appear below. 
+```{r summary, echo=FALSE}
+  mlb11 <- datasetInput()
+  temp <- cbind(mlb11[input$dv], mlb11[input$iv])
+  summary(temp)
+```
+
+`r input$text_summary` 
+
+<br />
+
+###2. Histograms
+
+The histograms of `r input$dv` and `r input$iv` appear below. <br />
+<br />
+<br />
+
+```{r hist_dv, echo=FALSE}
+    x    <- mlb11[,input$dv]  
+    bins <- seq(min(x), max(x), length.out = input$bins_dv + 1)
+    
+    hist(x, breaks = bins, col = 'darkgray', border = 'white', main = 'Dependent Variable', xlab = input$dv)
+```
+
+`r input$text_hist_dv`
+
+```{r hist_iv, echo=FALSE}
+    x    <- mlb11[,input$iv]  
+    bins <- seq(min(x), max(x), length.out = input$bins_iv + 1)
+    
+    hist(x, breaks = bins, col = 'darkgray', border = 'white', main = 'Independent Variable', xlab = input$iv)
+```
+
+`r input$text_hist_iv`
+
+<br />
+
+###3. Scatter Plot 
+
+A scatter plot of `r input$dv` and `r input$iv` appears below.  <br />
+<br />
+
+```{r scatter, echo=FALSE}
+
+  plot(mlb11[,input$iv], mlb11[,input$dv],
+       xlab = input$iv, ylab = input$dv,  main = "Scatter Plot of Independent and Dependent Variables", pch = 16, 
+       col = "black", cex = 1) 
+  
+  abline(lm(mlb11[,input$dv]~mlb11[,input$iv]), col="grey", lwd = 2) 
+```
+
+`r input$text_scatter`
+
+<br />
+
+###4. Correlations
+
+A correlation matrix of all of the variables in `r input$dataset` appears below. 
+```{r correlation, echo=FALSE}
+
+cor <- as.data.frame(cor(mlb11[,-1]))
+cor <- format(round(cor, 2), nsmall = 2)
+cor
+
+```
+
+`r input$text_correlation`
+
+<br />
+
+###5. Regression Model
+
+A bivariate regression model predicting `r input$dv` with `r input$iv` appears below. 
+
+```{r model, collapse=TRUE, echo=FALSE}
+options(digits = 4)
+
+m1 <- lm(regFormula(), data = mlb11)
+b <- coef(m1)
+summary(m1)
+```
+
+The fitting result is $`r input$dv` = `r b[1]` + `r b[2]``r input$iv`$. <br />
+
+`r input$text_model`
+
+<br />
+
+
+###6. Residuals
+
+```{r residuals_hist, collapse=TRUE, echo=FALSE}
+
+hist(model()$residuals, main = paste(input$dv, '~', input$iv), xlab = 'Residuals') 
+
+```
+
+```{r residuals_scatter, collapse=TRUE, echo=FALSE}
+
+  plot(model()$residuals ~ mlb11[,input$iv], xlab = input$iv, ylab = 'Residuals')
+  abline(h = 0, lty = 3) 
+```
+
+```{r residuals_qqline, collapse=TRUE, echo=FALSE}
+
+  qqnorm(model()$residuals)
+  qqline(model()$residuals) 
+```
+
+
+`r input$text_residuals`
+
+
+
+
+
+
+
+

@@ -95,13 +95,6 @@ shinyServer(function(input, output) {
     qqline(model()$residuals) 
   })
 
-# hotable
-  output$hotable1 <- renderHotable({
-    df <- data.frame(String = c('a', 'b', 'c', 'd', 'e','a', 'b', 'c', 'd', 'e'), 
-                     Numeric1 = numeric(10), 
-                     Numeric2 = numeric(10))
-    return(df)
-  }, readOnly = FALSE)
 
 df <- reactive({
   hot.to.df(input$hotable1) # this will convert your input into a data.frame
